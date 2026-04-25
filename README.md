@@ -1,9 +1,9 @@
 # Product List with Cart - Dessert Shop
 
-A responsive, high-fidelity Dessert Shop Application built with **Angular 18**. This project demonstrates a modern e-commerce flow where users can browse products, manage shopping cart quantities in real-time, and view an itemized order total.
+A responsive Dessert Shop Application built with **Angular 18**. This project demonstrates a modern e-commerce flow where users can browse products, manage shopping cart quantities in real-time, and view an itemized order total.
 
 ## Live Demo
-[View Live Project](https://dessert-browse.netlify.app/)
+[View Live demo](https://dessert-browse.netlify.app/)
 
 ## Features
 - **Dynamic Product List:** Fetches data from a local JSON source using Angular's `HttpClient`.
