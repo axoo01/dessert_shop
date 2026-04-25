@@ -1,39 +1,87 @@
 .product-card {
-  margin-bottom: var(--spacing-200);
+  margin-bottom: var(--spacing-300);
 
   .image-container {
     position: relative;
-    margin-bottom: var(--spacing-400); // Space for the button to overlap
+    border: 2px solid transparent; 
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    margin-bottom: 32px; // Space for the button to hang off the bottom
+
+    // Figma: Red border when item is in cart
+    &.selected {
+      border-color: var(--color-red);
+    }
 
     .product-image {
       width: 100%;
-      border-radius: 8px;
+      border-radius: 6px; // Slightly smaller than container to look clean
       display: block;
     }
   }
 
-  .add-to-cart-btn {
+  // Common button positioning for both states
+  .add-to-cart-btn, .quantity-selector {
     position: absolute;
     bottom: 0;
     left: 50%;
-    transform: translate(-50%, 50%); // Centering and overlapping the edge
-    
+    transform: translate(-50%, 50%);
+    z-index: 10;
+    height: 44px; // Consistent height
+  }
+
+  // State 1: Add to Cart
+  .add-to-cart-btn {
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 8px;
-    
+    width: 160px;
     background-color: var(--color-white);
     border: 1px solid var(--color-rose-400);
-    padding: var(--spacing-150) var(--spacing-300);
+    padding: 0 var(--spacing-300);
     border-radius: 999px;
     font-weight: 600;
     cursor: pointer;
-    white-space: nowrap;
     transition: all 0.2s ease;
 
     &:hover {
       border-color: var(--color-red);
       color: var(--color-red);
+    }
+  }
+
+  // State 2: Quantity Selector (Red)
+  .quantity-selector {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 160px;
+    background-color: var(--color-red);
+    color: var(--color-white);
+    padding: 0 var(--spacing-150);
+    border-radius: 999px;
+
+    .qty-btn {
+      background: transparent;
+      border: 1px solid var(--color-white);
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s;
+
+      img { width: 10px; }
+
+      &:hover {
+        background: var(--color-white);
+        // This filter makes the white icon turn red on hover
+        img { filter: invert(26%) sepia(89%) saturate(2334%) hue-rotate(349deg) brightness(84%) contrast(106%); }
+      }
     }
   }
 
