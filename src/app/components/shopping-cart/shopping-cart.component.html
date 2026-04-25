@@ -1,1 +1,42 @@
-<p>shopping-cart works!</p>
+<div class="cart-container">
+  <h2 class="cart-title">Your Cart ({{ cartService.totalItems() }})</h2>
+
+  @if (cartService.totalItems() === 0) {
+    <div class="empty-state">
+      <img src="/assets/images/illustration-empty-cart.svg" alt="Empty Cart">
+      <p>Your added items will appear here</p>
+    </div>
+  } @else {
+    <ul class="cart-items-list">
+      @for (item of cartService.items(); track item.name) {
+        <li class="cart-item">
+          <div class="item-details">
+            <p class="item-name">{{ item.name }}</p>
+            <div class="item-meta">
+              <span class="item-qty">{{ item.quantity }}x</span>
+              <span class="item-unit-price">&#64; {{ item.price | currency }}</span>
+              <span class="item-total-price">{{ (item.price * item.quantity) | currency }}</span>
+            </div>
+          </div>
+          <button class="remove-btn" (click)="onRemoveItem(item.name)">
+            <img src="/assets/images/icon-remove-item.svg" alt="Remove item">
+          </button>
+        </li>
+      }
+    </ul>
+
+    <div class="cart-summary">
+      <div class="total-row">
+        <span class="label">Order Total</span>
+        <span class="value">{{ cartService.totalPrice() | currency }}</span>
+      </div>
+
+      <div class="carbon-neutral-badge">
+        <img src="/assets/images/icon-carbon-neutral.svg" alt="">
+        <p>This is a <strong>carbon-neutral</strong> delivery</p>
+      </div>
+
+      <button class="confirm-btn">Confirm Order</button>
+    </div>
+  }
+</div>
