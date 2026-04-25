@@ -1,0 +1,22 @@
+.main-container {
+  padding: var(--spacing-300); // 24px default padding
+  max-width: 1440px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr; // Mobile: Single column
+  gap: var(--spacing-400);    // 32px gap between sections
+
+  @media (min-width: 1024px) {
+    grid-template-columns: 2.5fr 1fr; // Desktop: 2/3 List, 1/3 Cart
+    padding: var(--spacing-1100);     // 88px padding as per Figma 1100
+    gap: var(--spacing-400);
+    align-items: start;               // Keep cart at the top when scrolling
+  }
+}
+
+.page-title {
+  font-size: 56px; /* From Typography Preset 1 */
+  font-weight: 700;
+  margin-bottom: var(--spacing-400);
+  color: var(--color-rose-900);
+}
