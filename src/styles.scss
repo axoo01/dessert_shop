@@ -1,0 +1,39 @@
+/* 1. Define the Font */
+@font-face {
+  font-family: 'Red Hat Text';
+  src: url('./assets/fonts/RedHatText-VariableFont_wght.ttf') format('truetype');
+  font-weight: 100 900;
+  font-style: normal;
+}
+
+/* 2. Design Tokens from Figma Style Guide */
+:root {
+  /* Colors */
+  --color-red: #C73B0F;
+  --color-rose-900: #260F08;
+  --color-rose-500: #87635A;
+  --color-rose-400: #AD8A85;
+  --color-rose-300: #CAAFA7;
+  --color-rose-100: #F5EEEC;
+  --color-rose-50: #FCF8F6;
+  --color-green: #1EA575;
+  --color-black: #000000;
+  --color-white: #FFFFFF;
+
+  /* Spacing */
+  --spacing-50: 4px;
+  --spacing-100: 8px;
+  --spacing-150: 12px;
+  --spacing-200: 16px;
+  --spacing-300: 24px;
+  --spacing-400: 32px;
+  --spacing-500: 40px;
+  --spacing-1100: 88px;
+}
+
+body {
+  margin: 0;
+  font-family: 'Red Hat Text', sans-serif;
+  background-color: var(--color-rose-50);
+  color: var(--color-rose-900);
+}
