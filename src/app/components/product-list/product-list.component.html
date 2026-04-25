@@ -1,1 +1,5 @@
-<p>product-list works!</p>
+<div class="product-grid">
+  @for (item of products; track item.name) {
+    <app-product-item [product]="item"></app-product-item>
+  }
+</div>
