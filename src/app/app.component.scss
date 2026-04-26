@@ -1,12 +1,12 @@
 .main-container {
-  padding: 24px var(--spacing-200); 
+  padding: 24px var(--spacing-300);
   max-width: 1440px;
   margin: 0 auto;
   display: grid;
   grid-template-columns: 1fr; 
   gap: var(--spacing-400);    
 
-  @media (min-width: 1024px) {
+  @media (min-width: 1200px) {
     grid-template-columns: 2.5fr 1fr; 
     padding: 40px var(--spacing-1100);     
     gap: var(--spacing-400);
@@ -14,8 +14,27 @@
   }
 }
 
+.cart-section {
+  width: 100%;
+  display: flex;
+  justify-content: center; 
+
+  app-shopping-cart {
+    width: 100%;
+
+    max-width: 800px; 
+  }
+
+  @media (min-width: 1200px) {
+    justify-content: flex-start;
+    app-shopping-cart {
+      max-width: none; 
+    }
+  }
+}
+
 .page-title {
-  font-size: 2rem; 
+  font-size: 2.5rem; 
   margin-top: 0;
   font-weight: 700;
   margin-bottom: var(--spacing-400);

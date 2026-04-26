@@ -32,6 +32,9 @@
   --spacing-1100: 88px;
 }
 
+*, *::before, *::after {
+  box-sizing: border-box;
+}
 body {
   margin: 0;
   font-family: 'Red Hat Text', sans-serif;

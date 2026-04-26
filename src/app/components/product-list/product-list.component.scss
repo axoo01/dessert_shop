@@ -1,7 +1,8 @@
 .product-grid {
   display: grid;
-  grid-template-columns: 1fr; 
-  gap: var(--spacing-300);
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: var(--spacing-400); 
+  justify-items: center;
 
   @media (min-width: 640px) {
     grid-template-columns: repeat(2, 1fr); 
@@ -9,5 +10,6 @@
 
   @media (min-width: 1024px) {
     grid-template-columns: repeat(3, 1fr); 
+    justify-items: stretch;
   }
 }
