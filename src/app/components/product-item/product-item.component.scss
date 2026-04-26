@@ -6,31 +6,31 @@
     border: 2px solid transparent; 
     border-radius: 8px;
     transition: all 0.3s ease;
-    margin-bottom: 32px; // Space for the button to hang off the bottom
+    margin-bottom: 32px; 
 
-    // Figma: Red border when item is in cart
+    
     &.selected {
       border-color: var(--color-red);
     }
 
     .product-image {
       width: 100%;
-      border-radius: 6px; // Slightly smaller than container to look clean
+      border-radius: 6px; 
       display: block;
     }
   }
 
-  // Common button positioning for both states
+  
   .add-to-cart-btn, .quantity-selector {
     position: absolute;
     bottom: 0;
     left: 50%;
     transform: translate(-50%, 50%);
     z-index: 10;
-    height: 44px; // Consistent height
+    height: 44px; 
   }
 
-  // State 1: Add to Cart
+
   .add-to-cart-btn {
     display: flex;
     align-items: center;
@@ -51,7 +51,7 @@
     }
   }
 
-  // State 2: Quantity Selector (Red)
+ 
   .quantity-selector {
     display: flex;
     align-items: center;
@@ -79,7 +79,7 @@
 
       &:hover {
         background: var(--color-white);
-        // This filter makes the white icon turn red on hover
+       
         img { filter: invert(26%) sepia(89%) saturate(2334%) hue-rotate(349deg) brightness(84%) contrast(106%); }
       }
     }
