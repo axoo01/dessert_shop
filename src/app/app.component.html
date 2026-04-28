@@ -5,6 +5,14 @@
   </section>
 
   <aside class="cart-section">
-    <app-shopping-cart></app-shopping-cart>
+    <app-shopping-cart (confirmOrder)="isModalOpen.set(true)"></app-shopping-cart>
   </aside>
 </main>
+
+@if (isModalOpen()) {
+  <app-order-confirmed-modal 
+    [items]="cartService.items()" 
+    [total]="cartService.totalPrice()"
+    (startNewOrder)="handleStartNewOrder()">
+  </app-order-confirmed-modal>
+}

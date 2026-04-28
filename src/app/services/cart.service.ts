@@ -49,5 +49,9 @@ updateQuantity(productName: string, change: number) {
   });
 }
 
+clearCart() {
+  this.cartItems.set([]); 
+}
+
  
 }

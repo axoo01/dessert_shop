@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, output } from '@angular/core'; // 👈 Added 'output'
 import { CommonModule } from '@angular/common';
 import { CartService } from '../../services/cart.service';
 
@@ -10,14 +10,18 @@ import { CartService } from '../../services/cart.service';
   styleUrl: './shopping-cart.component.scss'
 })
 export class ShoppingCartComponent {
-  
   cartService = inject(CartService);
 
+  confirmOrder = output<void>(); 
+
   onRemoveItem(productName: string) {
-    
     const item = this.cartService.items().find(i => i.name === productName);
     if (item) {
       this.cartService.updateQuantity(productName, -item.quantity);
     }
+  }
+
+  onConfirmClick() {
+    this.confirmOrder.emit();
   }
 }
