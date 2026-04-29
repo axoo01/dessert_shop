@@ -1,6 +1,7 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DataService } from '../../services/data.service';
+import { ProductService } from '../../services/product.service';
 import { Product } from '../../models/product.interface';
 import { ProductItemComponent } from '../product-item/product-item.component'
 
@@ -14,10 +15,11 @@ import { ProductItemComponent } from '../product-item/product-item.component'
 export class ProductListComponent implements OnInit {
   private dataService = inject(DataService);
   products: Product[] = [];
+  private productService = inject(ProductService);
 
   ngOnInit(): void {
     this.dataService.getProducts().subscribe(data => {
-      this.products = data;
+      this.products = this.productService.sortByPrice(data);
     });
   }
-}
+} 
