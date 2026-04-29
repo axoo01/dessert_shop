@@ -4,11 +4,13 @@ import { DataService } from '../../services/data.service';
 import { ProductService } from '../../services/product.service';
 import { Product } from '../../models/product.interface';
 import { ProductItemComponent } from '../product-item/product-item.component'
+import { ProductHighlightService } from '../../services/product-highlight.service';
 
 @Component({
   selector: 'app-product-list',
   standalone: true,
   imports: [CommonModule, ProductItemComponent], 
+  providers: [ProductHighlightService],
   templateUrl: './product-list.component.html',
   styleUrl: './product-list.component.scss'
 })
