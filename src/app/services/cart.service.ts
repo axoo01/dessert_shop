@@ -1,12 +1,14 @@
-import { Injectable, signal, computed } from '@angular/core';
+import { Injectable, signal, computed, inject } from '@angular/core';
 import { CartItem } from '../models/product.interface';
 import { Product } from '../models/product.interface';
+import { LoggingService } from './logging.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CartService {
   
+  private loggingService = inject(LoggingService);
   private cartItems = signal<CartItem[]>([]);
 
  
@@ -21,6 +23,7 @@ export class CartService {
   );
 
   addToCart(product: Product) {
+    this.loggingService.logAction('Adding to cart', product.name);
     this.cartItems.update(prev => {
       const existing = prev.find(i => i.name === product.name);
       if (existing) {
@@ -50,6 +53,7 @@ updateQuantity(productName: string, change: number) {
 }
 
 clearCart() {
+  this.loggingService.logAction('Clearing cart');
   this.cartItems.set([]); 
 }
 

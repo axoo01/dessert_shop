@@ -9,7 +9,7 @@
   padding: var(--spacing-300);
 
   @media (max-width: 640px) {
-    align-items: flex-end; // Bottom sheet on mobile
+    align-items: flex-end; 
     padding: 0;
   }
 }
@@ -19,7 +19,7 @@
   padding: 40px;
   border-radius: 12px;
   width: 100%;
-  max-width: 592px;
+  max-width: 500px;
   max-height: 90vh;
   overflow-y: auto;
 
