@@ -2,11 +2,14 @@ import { Injectable, signal, computed, inject } from '@angular/core';
 import { CartItem } from '../models/product.interface';
 import { Product } from '../models/product.interface';
 import { LoggingService } from './logging.service';
+import { UtilityService } from './utility.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CartService {
+
+  private utilityService = inject(UtilityService);
   
   private loggingService = inject(LoggingService);
   private cartItems = signal<CartItem[]>([]);
@@ -14,7 +17,14 @@ export class CartService {
  
   items = this.cartItems.asReadonly();
   
+  taxAmount = computed(() => 
+    this.utilityService.calculateTax(this.totalPrice())
+  );
  
+  grandTotal = computed(() => 
+    this.totalPrice() + this.taxAmount()
+  );
+  
   totalItems = computed(() => 
     this.cartItems().reduce((acc, item) => acc + item.quantity, 0)
   );

@@ -26,19 +26,30 @@
     </ul>
 
     <div class="cart-summary">
-      <div class="total-row">
-        <span class="label">Order Total</span>
-        <span class="value">{{ cartService.totalPrice() | currency }}</span>
-      </div>
+  <!-- Subtotal (The raw price of items) -->
+  <div class="summary-row">
+    <span class="label">Subtotal</span>
+    <span class="value-small">{{ cartService.totalPrice() | currency }}</span>
+  </div>
 
-      <div class="carbon-neutral-badge">
-        <img src="/assets/images/icon-carbon-neutral.svg" alt="">
-        <p>This is a <strong>carbon-neutral</strong> delivery</p>
-      </div>
+  <!-- Tax (Calculated via UtilityService) -->
+  <div class="summary-row">
+    <span class="label">Tax (8%)</span>
+    <span class="value-small">{{ cartService.taxAmount() | currency }}</span>
+  </div>
 
-      <button class="confirm-btn" (click)="onConfirmClick()">
-        Confirm Order
-      </button>
-    </div>
+  <!-- The Final Order Total -->
+  <div class="total-row highlight">
+    <span class="label">Order Total</span>
+    <span class="value">{{ cartService.grandTotal() | currency }}</span>
+  </div>
+
+  <div class="carbon-neutral-badge">
+    <img src="/assets/images/icon-carbon-neutral.svg" alt="">
+    <p>This is a <strong>carbon-neutral</strong> delivery</p>
+  </div>
+
+  <button class="confirm-btn" (click)="onConfirmClick()">Confirm Order</button>
+</div>
   }
 </div>

@@ -70,7 +70,7 @@
 
         &:hover {
           border-color: var(--color-rose-900);
-          img { filter: brightness(0); } // Makes icon black on hover
+          img { filter: brightness(0); } 
         }
       }
     }
@@ -79,11 +79,24 @@
   .cart-summary {
     margin-top: var(--spacing-300);
 
+    
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      
+      .label { color: var(--color-rose-500); font-size: 14px; }
+      .value-small { color: var(--color-rose-900); font-weight: 600; }
+    }
+
+   
     .total-row {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: var(--spacing-300);
+      margin: 16px 0 var(--spacing-300) 0; 
+      padding-top: 16px; 
+      border-top: 1px solid var(--color-rose-100); 
 
       .label { font-size: 14px; color: var(--color-rose-900); }
       .value { font-size: 24px; font-weight: 700; color: var(--color-rose-900); }
