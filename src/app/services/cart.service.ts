@@ -1,4 +1,4 @@
-import { Injectable, signal, computed, inject } from '@angular/core';
+import { Injectable, signal, computed, inject, effect } from '@angular/core';
 import { CartItem } from '../models/product.interface';
 import { Product } from '../models/product.interface';
 import { LoggingService } from './logging.service';
@@ -10,9 +10,15 @@ import { UtilityService } from './utility.service';
 export class CartService {
 
   private utilityService = inject(UtilityService);
-  
   private loggingService = inject(LoggingService);
-  private cartItems = signal<CartItem[]>([]);
+  private cartItems = signal<CartItem[]>(this.loadCart());
+
+  constructor() {
+    effect(() => {
+      localStorage.setItem('dessert_cart', JSON.stringify(this.cartItems()));
+      this.loggingService.logAction('Cart persisted to LocalStorage');
+    });
+  }
 
  
   items = this.cartItems.asReadonly();
@@ -24,13 +30,18 @@ export class CartService {
   grandTotal = computed(() => 
     this.totalPrice() + this.taxAmount()
   );
-  
+
   totalItems = computed(() => 
     this.cartItems().reduce((acc, item) => acc + item.quantity, 0)
   );
   totalPrice = computed(() => 
     this.cartItems().reduce((acc, item) => acc + (item.price * item.quantity), 0)
   );
+
+  private loadCart(): CartItem[] {
+    const saved = localStorage.getItem('dessert_cart');
+    return saved ? JSON.parse(saved) : [];
+  }
 
   addToCart(product: Product) {
     this.loggingService.logAction('Adding to cart', product.name);
