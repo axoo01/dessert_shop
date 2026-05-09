@@ -1,6 +1,6 @@
-import { Injectable, signal, computed, inject, effect } from '@angular/core';
-import { CartItem } from '../models/product.interface';
-import { Product } from '../models/product.interface';
+import { Injectable, inject } from '@angular/core';
+import { BehaviorSubject, map, Observable, tap } from 'rxjs'; // 👈 Essential RxJS imports
+import { CartItem, Product } from '../models/product.interface';
 import { LoggingService } from './logging.service';
 import { UtilityService } from './utility.service';
 
@@ -8,35 +8,39 @@ import { UtilityService } from './utility.service';
   providedIn: 'root'
 })
 export class CartService {
-
-  private utilityService = inject(UtilityService);
   private loggingService = inject(LoggingService);
-  private cartItems = signal<CartItem[]>(this.loadCart());
+  private utilityService = inject(UtilityService);
+
+  // 🛡️ Task 6: BehaviorSubject maintains the "latest value" of the cart
+  private cartItemsSubject = new BehaviorSubject<CartItem[]>(this.loadCart());
+
+  // 🛡️ Task 2: Expose as Observable for components to consume
+  cartItems$ = this.cartItemsSubject.asObservable();
+
+  // 🛡️ Reactive Derived State: Replacing 'computed' with 'pipe(map)'
+  totalItems$ = this.cartItems$.pipe(
+    map(items => items.reduce((acc, item) => acc + item.quantity, 0))
+  );
+
+  totalPrice$ = this.cartItems$.pipe(
+    map(items => items.reduce((acc, item) => acc + (item.price * item.quantity), 0))
+  );
+
+  taxAmount$ = this.totalPrice$.pipe(
+    map(total => this.utilityService.calculateTax(total))
+  );
+
+  grandTotal$ = this.totalPrice$.pipe(
+    map(total => total + this.utilityService.calculateTax(total))
+  );
 
   constructor() {
-    effect(() => {
-      localStorage.setItem('dessert_cart', JSON.stringify(this.cartItems()));
-      this.loggingService.logAction('Cart persisted to LocalStorage');
+    // 🛡️ Manual Subscription for persistence (Service Lifecycle)
+    this.cartItems$.subscribe(items => {
+      localStorage.setItem('dessert_cart', JSON.stringify(items));
+      this.loggingService.logAction('Cart persisted via RxJS Stream');
     });
   }
-
- 
-  items = this.cartItems.asReadonly();
-  
-  taxAmount = computed(() => 
-    this.utilityService.calculateTax(this.totalPrice())
-  );
- 
-  grandTotal = computed(() => 
-    this.totalPrice() + this.taxAmount()
-  );
-
-  totalItems = computed(() => 
-    this.cartItems().reduce((acc, item) => acc + item.quantity, 0)
-  );
-  totalPrice = computed(() => 
-    this.cartItems().reduce((acc, item) => acc + (item.price * item.quantity), 0)
-  );
 
   private loadCart(): CartItem[] {
     const saved = localStorage.getItem('dessert_cart');
@@ -44,39 +48,38 @@ export class CartService {
   }
 
   addToCart(product: Product) {
-    this.loggingService.logAction('Adding to cart', product.name);
-    this.cartItems.update(prev => {
-      const existing = prev.find(i => i.name === product.name);
-      if (existing) {
-        return prev.map(i => i.name === product.name 
-          ? { ...i, quantity: i.quantity + 1 } 
-          : i
-        );
-      }
-      return [...prev, { ...product, quantity: 1 }];
-    });
+    const currentItems = this.cartItemsSubject.value; // Get the "now" value
+    const existing = currentItems.find(i => i.name === product.name);
+    
+    let updatedItems: CartItem[];
+    if (existing) {
+      updatedItems = currentItems.map(i => i.name === product.name 
+        ? { ...i, quantity: i.quantity + 1 } : i
+      );
+    } else {
+      updatedItems = [...currentItems, { ...product, quantity: 1 }];
+    }
+
+    this.cartItemsSubject.next(updatedItems); // 👈 Broadcast the new state
+    this.loggingService.logAction('Added to cart', product.name);
   }
 
+  updateQuantity(productName: string, change: number) {
+    const updatedItems = this.cartItemsSubject.value
+      .map(item => {
+        if (item.name === productName) {
+          const newQty = item.quantity + change;
+          return newQty > 0 ? { ...item, quantity: newQty } : null;
+        }
+        return item;
+      })
+      .filter((item): item is CartItem => item !== null);
 
+    this.cartItemsSubject.next(updatedItems);
+  }
 
-updateQuantity(productName: string, change: number) {
-  this.cartItems.update(prev => {
-    return prev.map(item => {
-      if (item.name === productName) {
-        const newQty = item.quantity + change;
-       
-        return newQty > 0 ? { ...item, quantity: newQty } : null;
-      }
-      return item;
-    }).filter((item): item is CartItem => item !== null); 
-    
-  });
-}
-
-clearCart() {
-  this.loggingService.logAction('Clearing cart');
-  this.cartItems.set([]); 
-}
-
- 
+  clearCart() {
+    this.cartItemsSubject.next([]);
+    this.loggingService.logAction('Clearing cart');
+  }
 }
