@@ -1,5 +1,7 @@
 <div class="product-grid">
-  @for (item of products; track item.name) {
-    <app-product-item [product]="item"></app-product-item>
+  @for (item of (products$ | async); track item.name) {
+  <app-product-item [product]="item"></app-product-item>
+  } @empty {
+  <p>No desserts found. Our bakers are working hard!</p>
   }
 </div>
