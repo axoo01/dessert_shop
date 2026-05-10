@@ -13,3 +13,29 @@
     justify-items: stretch;
   }
 }
+.search-wrapper {
+  margin-bottom: 2rem;
+  max-width: 100%;
+
+  .search-input {
+    width: 30.5%;
+    padding: 0.5rem 1.5rem;
+    font-size: 1rem;
+    border-radius: 8px; 
+    border: 1px solid var(--rose-300, #ad8a85); 
+    background-color: #fff;
+    color: var(--rose-900, #260f08);
+    transition: all 0.2s ease-in-out;
+    outline: none;
+
+    &::placeholder {
+      color: var(--rose-500, #87635a);
+    }
+
+ 
+    &:focus {
+      border-color: var(--color-red, #c73b0f);
+      box-shadow: 0 0 0 3px rgba(199, 59, 15, 0.1); // Subtle glow
+    }
+  }
+}
