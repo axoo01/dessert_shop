@@ -1,8 +1,9 @@
-import { Injectable, inject } from '@angular/core';
-import { BehaviorSubject, map, Observable, tap } from 'rxjs'; // 👈 Essential RxJS imports
+import { Injectable, inject, DestroyRef } from '@angular/core';
+import { BehaviorSubject, map, Observable, tap } from 'rxjs'; 
 import { CartItem, Product } from '../models/product.interface';
 import { LoggingService } from './logging.service';
 import { UtilityService } from './utility.service';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Injectable({
   providedIn: 'root'
@@ -10,14 +11,15 @@ import { UtilityService } from './utility.service';
 export class CartService {
   private loggingService = inject(LoggingService);
   private utilityService = inject(UtilityService);
+  private destroyRef = inject(DestroyRef);
 
-  // 🛡️ Task 6: BehaviorSubject maintains the "latest value" of the cart
+ 
   private cartItemsSubject = new BehaviorSubject<CartItem[]>(this.loadCart());
 
-  // 🛡️ Task 2: Expose as Observable for components to consume
+ 
   cartItems$ = this.cartItemsSubject.asObservable();
 
-  // 🛡️ Reactive Derived State: Replacing 'computed' with 'pipe(map)'
+  
   totalItems$ = this.cartItems$.pipe(
     map(items => items.reduce((acc, item) => acc + item.quantity, 0))
   );
@@ -35,8 +37,10 @@ export class CartService {
   );
 
   constructor() {
-    // 🛡️ Manual Subscription for persistence (Service Lifecycle)
-    this.cartItems$.subscribe(items => {
+    
+    this.cartItems$.pipe(
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe(items => {
       localStorage.setItem('dessert_cart', JSON.stringify(items));
       this.loggingService.logAction('Cart persisted via RxJS Stream');
     });
@@ -48,7 +52,7 @@ export class CartService {
   }
 
   addToCart(product: Product) {
-    const currentItems = this.cartItemsSubject.value; // Get the "now" value
+    const currentItems = this.cartItemsSubject.value; 
     const existing = currentItems.find(i => i.name === product.name);
     
     let updatedItems: CartItem[];

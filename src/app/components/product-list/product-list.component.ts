@@ -1,11 +1,12 @@
-import { Component, inject, DestroyRef } from '@angular/core'; // 👈 Added DestroyRef for Task 7
+import { Component, inject, DestroyRef } from '@angular/core'; 
 import { CommonModule } from '@angular/common';
-import { FormControl, ReactiveFormsModule } from '@angular/forms'; // 👈 Task 4: Forms
+import { FormControl, ReactiveFormsModule } from '@angular/forms'; 
 import { DataService } from '../../services/data.service';
 import { ProductService } from '../../services/product.service';
 import { LoggingService } from '../../services/logging.service';
 import { ProductItemComponent } from '../product-item/product-item.component';
 import { ProductHighlightService } from '../../services/product-highlight.service';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { 
   map, 
   Observable, 
@@ -22,7 +23,6 @@ import {
 @Component({
   selector: 'app-product-list',
   standalone: true,
-  // 🛡️ Added ReactiveFormsModule for the search input
   imports: [CommonModule, ProductItemComponent, ReactiveFormsModule], 
   providers: [ProductHighlightService],
   templateUrl: './product-list.component.html',
@@ -32,6 +32,17 @@ export class ProductListComponent {
   private dataService = inject(DataService);
   private productService = inject(ProductService);
   private loggingService = inject(LoggingService);
+  private destroyRef = inject(DestroyRef);
+
+
+  constructor() {
+   
+    this.products$.pipe(
+      takeUntilDestroyed(this.destroyRef) 
+    ).subscribe(products => {
+      console.log(`UI Updated with ${products.length} products`);
+    });
+  }
 
   
   private errorSubject = new Subject<string | null>();
