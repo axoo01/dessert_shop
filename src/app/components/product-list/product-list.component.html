@@ -1,7 +1,13 @@
+<div class="search-wrapper">
+  <input type="text" [formControl]="searchControl" placeholder="Search for a dessert..." class="search-input">
+</div>
+
 <div class="product-grid">
   @for (item of (products$ | async); track item.name) {
   <app-product-item [product]="item"></app-product-item>
   } @empty {
-  <p>No desserts found. Our bakers are working hard!</p>
+  <div class="no-results">
+    <p>No desserts match "{{ searchControl.value }}".</p>
+  </div>
   }
 </div>
