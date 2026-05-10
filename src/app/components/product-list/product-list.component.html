@@ -1,13 +1,20 @@
 <div class="search-wrapper">
-  <input type="text" [formControl]="searchControl" placeholder="Search for a dessert..." class="search-input">
+  <input type="text" [formControl]="searchControl" placeholder="Search..." class="search-input">
 </div>
+
+@if (error$ | async; as errorMessage) {
+<div class="error-banner">
+  <img src="/assets/images/icon-error.svg" alt="Error">
+  <p>{{ errorMessage }}</p>
+</div>
+}
 
 <div class="product-grid">
   @for (item of (products$ | async); track item.name) {
   <app-product-item [product]="item"></app-product-item>
   } @empty {
-  <div class="no-results">
-    <p>No desserts match "{{ searchControl.value }}".</p>
-  </div>
+  @if (!(error$ | async)) {
+  <p>No desserts match your search.</p>
+  }
   }
 </div>

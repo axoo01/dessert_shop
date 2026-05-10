@@ -13,7 +13,10 @@ import {
   startWith, 
   debounceTime, 
   distinctUntilChanged, 
-  tap 
+  tap,
+  catchError, 
+  of,         
+  Subject
 } from 'rxjs'; 
 
 @Component({
@@ -30,30 +33,34 @@ export class ProductListComponent {
   private productService = inject(ProductService);
   private loggingService = inject(LoggingService);
 
-  // 🛡️ Task 4: Reactive User Input
+  
+  private errorSubject = new Subject<string | null>();
+  error$ = this.errorSubject.asObservable();
+
   searchControl = new FormControl('', { nonNullable: true });
 
-  // 🛡️ Task 3 & 4: Creating the Search Stream
-  private searchTerm$: Observable<string> = this.searchControl.valueChanges.pipe(
-    debounceTime(300), // Wait for user to pause
-    distinctUntilChanged(), // Only if search changed
-    startWith(''), // Initial state: no filter
-    tap(term => this.loggingService.logAction('Search Term Changed', term)) // Task 3: tap
+  private searchTerm$ = this.searchControl.valueChanges.pipe(
+    debounceTime(300),
+    distinctUntilChanged(),
+    startWith('')
   );
 
-  // 🛡️ Task 5: Combining Multiple Streams
   products$: Observable<any[]> = combineLatest([
-    this.dataService.getProducts(),
+    this.dataService.getProducts().pipe(
+      catchError(err => {
+        this.loggingService.logError('Failed to load products');
+        this.errorSubject.next('We couldn’t load the desserts. Please try again later.');
+        return of([]); 
+      })
+    ),
     this.searchTerm$
   ]).pipe(
     map(([products, term]) => {
-      // First, filter by name
+      this.errorSubject.next(null); 
       const filtered = products.filter(p => 
         p.name.toLowerCase().includes(term.toLowerCase())
       );
-      // Second, sort by price (using your ProductService method)
       return this.productService.sortByPrice(filtered);
-    }),
-    tap(results => this.loggingService.logAction('Filtered Results count', results.length))
+    })
   );
 }
