@@ -13,12 +13,24 @@
     justify-items: stretch;
   }
 }
+
+.error-banner{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+}
+.error-banner img{
+  width: 32px;
+  height: 32px;
+  
+}
 .search-wrapper {
   margin-bottom: 2rem;
-  max-width: 100%;
+  min-width: 70px;
 
   .search-input {
-    width: 30.5%;
+    min-width: 50px;
     padding: 0.5rem 1.5rem;
     font-size: 1rem;
     border-radius: 8px; 
@@ -35,7 +47,7 @@
  
     &:focus {
       border-color: var(--color-red, #c73b0f);
-      box-shadow: 0 0 0 3px rgba(199, 59, 15, 0.1); // Subtle glow
+      box-shadow: 0 0 0 3px rgba(199, 59, 15, 0.1); 
     }
   }
 }

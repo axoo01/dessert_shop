@@ -57,21 +57,24 @@ export class ProductListComponent {
   );
 
   products$: Observable<any[]> = combineLatest([
-    this.dataService.getProducts().pipe(
-      catchError(err => {
-        this.loggingService.logError('Failed to load products');
-        this.errorSubject.next('We couldn’t load the desserts. Please try again later.');
-        return of([]); 
-      })
-    ),
-    this.searchTerm$
-  ]).pipe(
-    map(([products, term]) => {
-      this.errorSubject.next(null); 
-      const filtered = products.filter(p => 
-        p.name.toLowerCase().includes(term.toLowerCase())
-      );
-      return this.productService.sortByPrice(filtered);
+  this.dataService.getProducts().pipe(
+    
+    tap(() => this.errorSubject.next(null)), 
+    catchError(err => {
+      this.loggingService.logError('Failed to load products');
+      this.errorSubject.next('We couldn’t load the desserts. Please try again later.');
+      return of([]); 
     })
-  );
+  ),
+  this.searchTerm$
+]).pipe(
+  map(([products, term]) => {
+    
+    
+    const filtered = products.filter(p => 
+      p.name.toLowerCase().includes(term.toLowerCase())
+    );
+    return this.productService.sortByPrice(filtered);
+  })
+);
 }
