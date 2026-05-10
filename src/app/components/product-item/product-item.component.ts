@@ -1,9 +1,9 @@
 import { Component, Input, inject, computed } from '@angular/core'; 
 import { CommonModule } from '@angular/common';
-import { Product } from '../../models/product.interface'; 
+import { Product, CartItem } from '../../models/product.interface'; 
 import { CartService } from '../../services/cart.service';
-// 1. Import the service
 import { ProductHighlightService } from '../../services/product-highlight.service';
+import { Observable, map } from 'rxjs';
 
 @Component({
   selector: 'app-product-item',
@@ -23,8 +23,8 @@ export class ProductItemComponent {
     this.highlightService.highlightedProductName() === this.product.name
   );
 
-  cartItem = computed(() => 
-    this.cartService.items().find(i => i.name === this.product.name)
+  cartItem$: Observable<CartItem | undefined> = this.cartService.cartItems$.pipe(
+    map((items: CartItem[]) => items.find(i => i.name === this.product.name))
   );
 
   
@@ -41,8 +41,6 @@ export class ProductItemComponent {
   }
 
   onDecrement() {
-    if (this.cartItem()) {
-      this.cartService.updateQuantity(this.product.name, -1);
-    }
+    this.cartService.updateQuantity(this.product.name, -1);
   }
 }

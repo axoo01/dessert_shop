@@ -1,34 +1,30 @@
-<div class="product-card" 
-     (mouseenter)="onMouseEnter()" 
-     (mouseleave)="onMouseLeave()">
-  
+<div class="product-card" (mouseenter)="onMouseEnter()" (mouseleave)="onMouseLeave()">
 
-  <div class="image-container" 
-       [class.selected]="cartItem()" 
-       [class.highlighted]="isHighlighted()">
-    
+  @let item = cartItem$ | async;
+
+  <div class="image-container" [class.selected]="item" [class.highlighted]="isHighlighted()">
+
     <picture>
       <source media="(min-width: 1024px)" [srcset]="product.image.desktop">
       <source media="(min-width: 640px)" [srcset]="product.image.tablet">
       <img [src]="product.image.mobile" [alt]="product.name" class="product-image">
     </picture>
 
-  
-    @if (!cartItem()) {
-      <button class="add-to-cart-btn" (click)="onAddToCart()">
-        <img src="/assets/images/icon-add-to-cart.svg" alt="">
-        Add to Cart
-      </button>
+    @if (!item) {
+    <button class="add-to-cart-btn" (click)="onAddToCart()">
+      <img src="/assets/images/icon-add-to-cart.svg" alt="">
+      Add to Cart
+    </button>
     } @else {
-      <div class="quantity-selector">
-        <button class="qty-btn" (click)="onDecrement()">
-          <img src="/assets/images/icon-decrement-quantity.svg" alt="minus">
-        </button>
-        <span>{{ cartItem()?.quantity }}</span>
-        <button class="qty-btn" (click)="onAddToCart()">
-          <img src="/assets/images/icon-increment-quantity.svg" alt="plus">
-        </button>
-      </div>
+    <div class="quantity-selector">
+      <button class="qty-btn" (click)="onDecrement()">
+        <img src="/assets/images/icon-decrement-quantity.svg" alt="minus">
+      </button>
+      <span>{{ item.quantity }}</span>
+      <button class="qty-btn" (click)="onAddToCart()">
+        <img src="/assets/images/icon-increment-quantity.svg" alt="plus">
+      </button>
+    </div>
     }
   </div>
 
