@@ -10,9 +10,7 @@
 </main>
 
 @if (isModalOpen()) {
-  <app-order-confirmed-modal 
-    [items]="cartService.items()" 
-    [total]="cartService.totalPrice()"
-    (startNewOrder)="handleStartNewOrder()">
-  </app-order-confirmed-modal>
+<app-order-confirmed-modal [items]="(cartService.cartItems$ | async) ?? []"
+  [total]="(cartService.totalPrice$ | async) ?? 0" (startNewOrder)="handleStartNewOrder()">
+</app-order-confirmed-modal>
 }

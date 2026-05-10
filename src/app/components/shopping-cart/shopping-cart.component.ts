@@ -1,6 +1,7 @@
 import { Component, inject, output } from '@angular/core'; // 👈 Added 'output'
 import { CommonModule } from '@angular/common';
 import { CartService } from '../../services/cart.service';
+import { CartItem } from '../../models/product.interface';
 
 @Component({
   selector: 'app-shopping-cart',
@@ -14,11 +15,8 @@ export class ShoppingCartComponent {
 
   confirmOrder = output<void>(); 
 
-  onRemoveItem(productName: string) {
-    const item = this.cartService.items().find(i => i.name === productName);
-    if (item) {
-      this.cartService.updateQuantity(productName, -item.quantity);
-    }
+  onRemoveItem(item: CartItem) {
+    this.cartService.updateQuantity(item.name, -item.quantity);
   }
 
   onConfirmClick() {
