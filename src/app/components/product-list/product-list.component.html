@@ -2,19 +2,27 @@
   <input type="text" [formControl]="searchControl" placeholder="Search a dessert..." class="search-input">
 </div>
 
-@if (error$ | async; as errorMessage) {
-<div class="error-banner">
-  <img src="assets/images/icon-error.png" alt="Error Image">
-  <p>{{ errorMessage }}</p>
+@let state = vm$ | async;
+
+@if (state) {
+@if (state.loading) {
+<div class="loading-state">
+  <p>Baking our desserts... please wait 🧁</p>
 </div>
 }
-
+@else if (state.error) {
+<div class="error-banner">
+  <img src="assets/images/icon-error.png" alt="Error Image">
+  <p>{{ state.error }}</p>
+</div>
+}
+@else {
 <div class="product-grid">
-  @for (item of (products$ | async); track item.name) {
+  @for (item of state.products; track item.name) {
   <app-product-item [product]="item"></app-product-item>
   } @empty {
-  @if (!(error$ | async)) {
-  <p>No desserts match your search.</p>
-  }
+  <p>No desserts match "{{ searchControl.value }}".</p>
   }
 </div>
+}
+}

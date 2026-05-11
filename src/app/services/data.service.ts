@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, delay } from 'rxjs';
 import { Product } from '../models/product.interface';
 
 @Injectable({
@@ -11,6 +11,9 @@ export class DataService {
   private dataUrl = 'data.json'; 
 
   getProducts(): Observable<Product[]> {
-    return this.http.get<Product[]>(this.dataUrl);
+    // Simulate a 1.5s network delay
+    return this.http.get<Product[]>(this.dataUrl).pipe(
+      delay(1500)
+    );
   }
 }
